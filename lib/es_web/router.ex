@@ -24,8 +24,8 @@ defmodule EsWeb.Router do
   scope "/api", EsWeb do
     pipe_through :api
 
-    get "/translations/find", TranslateController, :find
-    post "/translations", TranslateController, :create
+    get "/translations/find", TranslationController, :find
+    post "/translations", TranslationController, :create
   end
 
   # Enables LiveDashboard only for development

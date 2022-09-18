@@ -1,4 +1,4 @@
-defmodule EsWeb.TranslateControllerTest do
+defmodule EsWeb.TranslationControllerTest do
   use EsWeb.ConnCase
 
   import Es.TranslationsFixtures
@@ -52,7 +52,10 @@ defmodule EsWeb.TranslateControllerTest do
   describe "update translate" do
     setup [:create_translate]
 
-    test "renders translate when data is valid", %{conn: conn, translate: %Translate{id: id} = translate} do
+    test "renders translate when data is valid", %{
+      conn: conn,
+      translate: %Translate{id: id} = translate
+    } do
       conn = put(conn, Routes.translate_path(conn, :update, translate), translate: @update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 

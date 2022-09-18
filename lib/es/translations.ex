@@ -25,32 +25,22 @@ defmodule Es.Translations do
   """
   @spec get_translation(binary(), binary(), binary()) :: %Translation{} | nil
   def get_translation(source, source_lang, target_lang) do
-    response =
-      Repo.one(
-        from t in Translation,
-          select: %{
-            translation: t,
-            rank:
-              fragment(
-                "GREATEST(similarity(source, ?)) AS rank",
-                ^source
-              )
-          },
-          where:
-            t.source_lang == ^source_lang and
-              t.target_lang == ^target_lang and
-              fragment(
-                "ts @@ to_tsquery('english', ?)",
-                ^prefix_search(source)
-              ),
-          order_by: fragment("rank DESC"),
-          limit: 1
-      )
-
-    case response do
-      nil -> nil
-      %{translation: translation} -> translation
-    end
+    Repo.one(
+      from t in Translation,
+        where:
+          t.source_lang == ^source_lang and
+            t.target_lang == ^target_lang and
+            fragment(
+              "ts @@ to_tsquery('english', ?)",
+              ^prefix_search(source)
+            ),
+        order_by:
+          fragment(
+            "GREATEST(similarity(source, ?)) DESC",
+            ^source
+          ),
+        limit: 1
+    )
   end
 
   @doc """
